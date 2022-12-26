@@ -1,0 +1,172 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0-macos</TargetFramework>
+		<Nullable>enable</Nullable>
+		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+		<TrimMode>copyused</TrimMode>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<SelfContained>true</SelfContained>
+		<ApplicationId>com.abc.def</ApplicationId>
+		<UseAppHost>true</UseAppHost>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+		<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	  <EnableCodeSigning>false</EnableCodeSigning>
+	  <CreatePackage>false</CreatePackage>
+	  <UseSGen>false</UseSGen>
+	</PropertyGroup>
+
+<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+<PublishSingleFile>true</PublishSingleFile>
+<!--
+	<PublishReadyToRun>true</PublishReadyToRun>
+	-->
+	<RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+</PropertyGroup>
+	<ItemGroup>
+		<None Remove=".gitignore" />
+		<None Remove="Assets\Demos\hash_lips.zip" />
+		<None Remove="Assets\Fonts\WenQuanYiMicroHei-01.ttf" />
+		<None Remove="Assets\Images\add_picture.png" />
+		<None Remove="Assets\Images\collapse_text_input.png" />
+		<None Remove="Assets\Images\expand_text_input.png" />
+		<None Remove="Assets\Images\picture_album.png" />
+		<None Remove="Assets\Images\plus.png" />
+		<None Remove="Assets\Images\return.png" />
+		<None Remove="Assets\Images\save.png" />
+		<None Remove="Assets\Images\zoom_in.png" />
+		<None Remove="Assets\Images\zoom_out.png" />
+		<None Remove="Info %28copy%29.plist" />
+		<None Remove="Entitlements %28copy%29.plist" />
+		<None Remove="Entitlements.plist" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--This helps with theme dll-s trimming.
+    If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+    https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+		<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+		<TrimmableAssembly Include="Avalonia.Themes.Default" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Include="Avalonia" Version="0.10.18" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+		<PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.9.8" />
+		<PackageReference Include="Markdown.Avalonia" Version="0.10.12" />
+		<PackageReference Include="NetVips" Version="2.2.0" />
+		<PackageReference Include="NetVips.Extensions" Version="2.1.0" />
+		<PackageReference Include="NetVips.Native" Version="8.13.2" />
+		<PackageReference Include="Projektanker.Icons.Avalonia" Version="5.8.0" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="5.8.0" />
+		<PackageReference Include="SharpCompress" Version="0.32.2" />
+		<PackageReference Include="System.ComponentModel.EventBasedAsync" Version="4.3.0" />
+		<PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resources\Localization\AppResources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AppResources.resx</DependentUpon>
+			<Link>Resources\Localization\AppResources.Designer.cs</Link>
+		</Compile>
+		<Compile Update="Views\CollectionNameView.axaml.cs">
+		  <DependentUpon>CollectionNameView.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\FilterTraitView .axaml.cs">
+		  <DependentUpon>FilterTraitView .axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\TraitView.axaml.cs">
+		  <DependentUpon>TraitView.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Workspace.axaml.cs">
+		  <DependentUpon>Workspace.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Windows\ExportProgressWindow.axaml.cs">
+		  <DependentUpon>ExportProgressWindow.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Windows\OverwriteConfirmWindow.axaml.cs">
+		  <DependentUpon>OverwriteConfirmWindow.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Windows\ProcessingWindow.axaml.cs">
+		  <DependentUpon>ProcessingWindow.axaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Localization\AppResources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+			<Link>Resources\Localization\AppResources.resx</Link>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Localization\AppResources.zh.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<Link>Resources\Localization\AppResources.zh.resx</Link>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="App.config">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="app.config">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <BundleResource Condition="'$(_ResourcePrefix)' != ''" Update="Resources\Styles\Dark.axaml">
+	    <Link>Resources\Styles\Dark.axaml</Link>
+	  </BundleResource>
+	  <BundleResource Condition="'$(_ResourcePrefix)' != ''" Update="Resources\Styles\Light.axaml">
+	    <Link>Resources\Styles\Light.axaml</Link>
+	  </BundleResource>
+	  <BundleResource Condition="'$(_ResourcePrefix)' != ''" Update="Resources\icon.icns">
+	    <Link>Resources\icon.icns</Link>
+	  </BundleResource>
+	  <BundleResource Condition="'$(_ResourcePrefix)' != ''" Update="Resources\icons.icns">
+	    <Link>Resources\icons.icns</Link>
+	  </BundleResource>
+	</ItemGroup>
+  <ItemGroup>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon16.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon16.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon1024.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon1024.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon512.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon512.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon128.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon128.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon64.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon64.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon256.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon256.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Icon32.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon32.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\Contents.json">
+      <Link>Assets.xcassets\Contents.json</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\32x32%402x.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\32x32%402x.png</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\Contents.json">
+      <Link>Assets.xcassets\AppIcon.appiconset\Contents.json</Link>
+    </ImageAsset>
+    <ImageAsset Update="Assets.xcassets\AppIcon.appiconset\512x512%402x.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\512x512%402x.png</Link>
+    </ImageAsset>
+  </ItemGroup>	
+</Project>
